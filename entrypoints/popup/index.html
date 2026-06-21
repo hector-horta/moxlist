@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MoxList</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="popup">
+      <!-- Header -->
+      <header class="header">
+        <div class="header-brand">
+          <span class="header-icon">👑</span>
+          <h1 class="header-title">MoxList</h1>
+        </div>
+        <p class="header-subtitle">Wishlist Highlighter for Moxfield</p>
+      </header>
+
+      <!-- Status Card -->
+      <section class="card status-card" id="status-card">
+        <div class="status-row">
+          <span class="status-label">Estado</span>
+          <span class="status-value" id="status-value">Cargando...</span>
+        </div>
+        <div class="status-row">
+          <span class="status-label">Cartas</span>
+          <span class="status-value" id="card-count">—</span>
+        </div>
+        <div class="status-row">
+          <span class="status-label">Última sincronización</span>
+          <span class="status-value" id="last-updated">—</span>
+        </div>
+      </section>
+
+      <!-- Actions -->
+      <section class="card actions-card">
+        <button class="btn btn-primary" id="btn-sync">
+          <span class="btn-icon">🔄</span>
+          Sincronizar Wishlist
+        </button>
+        <button class="btn btn-secondary" id="btn-visit">
+          <span class="btn-icon">🌐</span>
+          Abrir Moxfield
+        </button>
+      </section>
+
+      <!-- Manual Import -->
+      <section class="card import-card">
+        <button class="toggle-section" id="btn-toggle-import">
+          <span class="toggle-icon" id="toggle-icon">▶</span>
+          Importación Manual
+        </button>
+        <div class="import-content" id="import-content" hidden>
+          <p class="import-help">
+            Exportá tu wishlist desde Moxfield y pegá el texto acá:
+          </p>
+          <textarea
+            class="import-textarea"
+            id="import-textarea"
+            placeholder="1 Lightning Bolt&#10;2 Sol Ring&#10;1 Rhystic Study&#10;..."
+            rows="6"
+          ></textarea>
+          <button class="btn btn-primary" id="btn-import">
+            <span class="btn-icon">📥</span>
+            Importar
+          </button>
+        </div>
+      </section>
+
+      <!-- Card List -->
+      <section class="card list-card" id="list-card" hidden>
+        <button class="toggle-section" id="btn-toggle-list">
+          <span class="toggle-icon" id="list-toggle-icon">▶</span>
+          Ver Cartas
+        </button>
+        <div class="list-content" id="list-content" hidden>
+          <div class="search-box">
+            <input
+              type="text"
+              class="search-input"
+              id="search-input"
+              placeholder="Buscar carta..."
+            />
+          </div>
+          <ul class="card-list" id="card-list"></ul>
+        </div>
+      </section>
+
+      <!-- Settings -->
+      <section class="card settings-card">
+        <div class="setting-row">
+          <label for="toggle-enabled">Highlighting activo</label>
+          <input type="checkbox" class="toggle" id="toggle-enabled" checked />
+        </div>
+        <div class="setting-row">
+          <label for="toggle-badge">Mostrar badge flotante</label>
+          <input type="checkbox" class="toggle" id="toggle-badge" checked />
+        </div>
+      </section>
+
+      <!-- Danger Zone -->
+      <section class="card danger-card">
+        <button class="btn btn-danger" id="btn-clear">
+          <span class="btn-icon">🗑️</span>
+          Limpiar Wishlist
+        </button>
+      </section>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <span>MoxList v1.0.0</span>
+      </footer>
+    </div>
+
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>
