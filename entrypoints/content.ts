@@ -306,7 +306,7 @@ function addCrown(el: HTMLElement): void {
   const crown = document.createElement('span');
   crown.className = CROWN_CLASS;
   crown.textContent = '👑';
-  crown.title = 'En tu wishlist de MoxList';
+  crown.title = 'In your MoxList wishlist';
 
   // Insert crown at the beginning of the element
   el.insertBefore(crown, el.firstChild);
@@ -336,7 +336,7 @@ function updateBadge(): void {
 
   badge.innerHTML = `
     <span>👑</span>
-    <span><span class="moxlist-badge-count">${matchCount}</span> carta${matchCount === 1 ? '' : 's'} del wishlist</span>
+    <span><span class="moxlist-badge-count">${matchCount}</span> wishlist card${matchCount === 1 ? '' : 's'}</span>
   `;
 }
 

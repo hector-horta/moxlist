@@ -83,12 +83,12 @@ async function syncWishlist(): Promise<MoxListResponse> {
       if (response.status === 401 || response.status === 403) {
         return {
           success: false,
-          error: 'No estás logueado en Moxfield. Abrí moxfield.com, logueate e intentá de nuevo.',
+          error: 'You are not logged into Moxfield. Please open moxfield.com, log in, and try again.',
         };
       }
       return {
         success: false,
-        error: `Error al conectar con Moxfield (HTTP ${response.status}).`,
+        error: `Error connecting to Moxfield (HTTP ${response.status}).`,
       };
     }
 
@@ -98,7 +98,7 @@ async function syncWishlist(): Promise<MoxListResponse> {
     if (!wishlistDeck) {
       return {
         success: false,
-        error: 'No se pudo obtener tu wishlist. Asegurate de tener una wishlist en tu cuenta de Moxfield.',
+        error: 'Could not retrieve your wishlist. Make sure you have a wishlist in your Moxfield account.',
       };
     }
 
@@ -106,7 +106,7 @@ async function syncWishlist(): Promise<MoxListResponse> {
   } catch (err) {
     return {
       success: false,
-      error: `Error de conexión: ${err instanceof Error ? err.message : String(err)}. Verificá tu conexión e intentá de nuevo.`,
+      error: `Connection error: ${err instanceof Error ? err.message : String(err)}. Check your connection and try again.`,
     };
   }
 }
@@ -117,7 +117,7 @@ function processWishlistResponse(data: MoxfieldDeckResponse): MoxListResponse {
   if (cardNames.length === 0) {
     return {
       success: false,
-      error: 'Tu wishlist está vacía o no se pudieron leer las cartas.',
+      error: 'Your wishlist is empty or no cards could be read.',
     };
   }
 
@@ -135,7 +135,7 @@ function processWishlistResponse(data: MoxfieldDeckResponse): MoxListResponse {
 
 async function importWishlist(text: string): Promise<MoxListResponse> {
   if (!text.trim()) {
-    return { success: false, error: 'El texto está vacío.' };
+    return { success: false, error: 'The text is empty.' };
   }
 
   const cardNames = parseManualText(text);
@@ -143,7 +143,7 @@ async function importWishlist(text: string): Promise<MoxListResponse> {
   if (cardNames.length === 0) {
     return {
       success: false,
-      error: 'No se pudieron extraer nombres de cartas del texto.',
+      error: 'Could not extract card names from the text.',
     };
   }
 

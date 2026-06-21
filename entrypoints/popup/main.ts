@@ -70,7 +70,7 @@ async function loadState(): Promise<void> {
       toggleBadge.checked = settings.showBadge;
     }
   } catch {
-    updateStatusError('Error al cargar');
+    updateStatusError('Error loading status');
   }
 }
 
@@ -129,7 +129,7 @@ function bindEvents(): void {
 async function handleSync(): Promise<void> {
   btnSync.disabled = true;
   const originalHTML = btnSync.innerHTML;
-  btnSync.innerHTML = '<span class="spinner"></span> Sincronizando...';
+  btnSync.innerHTML = '<span class="spinner"></span> Syncing...';
 
   try {
     const response = await sendMessage({ type: 'SYNC_WISHLIST' });
@@ -137,12 +137,12 @@ async function handleSync(): Promise<void> {
     if (response.success && response.data) {
       currentWishlist = response.data as WishlistData;
       updateStatusUI(currentWishlist);
-      showToast(`✅ ${currentWishlist.cards.length} cartas sincronizadas`);
+      showToast(`✅ ${currentWishlist.cards.length} cards synced successfully`);
     } else if (!response.success) {
-      showToast(`❌ ${response.error || 'Error desconocido'}`, 'error');
+      showToast(`❌ ${response.error || 'Unknown error'}`, 'error');
     }
   } catch (err) {
-    showToast('❌ Error de conexión', 'error');
+    showToast('❌ Connection error', 'error');
   } finally {
     btnSync.disabled = false;
     btnSync.innerHTML = originalHTML;
@@ -153,13 +153,13 @@ async function handleSync(): Promise<void> {
 async function handleImport(): Promise<void> {
   const text = importTextarea.value.trim();
   if (!text) {
-    showToast('⚠️ Pegá tu lista de cartas primero', 'error');
+    showToast('⚠️ Please paste your card list first', 'error');
     return;
   }
 
   btnImport.disabled = true;
   const originalHTML = btnImport.innerHTML;
-  btnImport.innerHTML = '<span class="spinner"></span> Importando...';
+  btnImport.innerHTML = '<span class="spinner"></span> Importing...';
 
   try {
     const response = await sendMessage({ type: 'IMPORT_WISHLIST', text });
@@ -170,12 +170,12 @@ async function handleImport(): Promise<void> {
       importTextarea.value = '';
       importContent.hidden = true;
       toggleIcon.classList.remove('open');
-      showToast(`✅ ${currentWishlist.cards.length} cartas importadas`);
+      showToast(`✅ ${currentWishlist.cards.length} cards imported`);
     } else if (!response.success) {
-      showToast(`❌ ${response.error || 'Error desconocido'}`, 'error');
+      showToast(`❌ ${response.error || 'Unknown error'}`, 'error');
     }
   } catch {
-    showToast('❌ Error al importar', 'error');
+    showToast('❌ Error importing', 'error');
   } finally {
     btnImport.disabled = false;
     btnImport.innerHTML = originalHTML;
@@ -191,9 +191,9 @@ async function handleClear(): Promise<void> {
     await sendMessage({ type: 'CLEAR_WISHLIST' });
     currentWishlist = null;
     updateStatusEmpty();
-    showToast('🗑️ Wishlist limpiada');
+    showToast('🗑️ Wishlist cleared');
   } catch {
-    showToast('❌ Error al limpiar', 'error');
+    showToast('❌ Error clearing wishlist', 'error');
   } finally {
     btnClear.disabled = false;
   }
@@ -203,10 +203,10 @@ async function handleClear(): Promise<void> {
 function updateStatusUI(data: WishlistData): void {
   const count = data.cards.length;
 
-  statusValue.textContent = '✅ Activa';
+  statusValue.textContent = '✅ Active';
   statusValue.className = 'status-value status-active';
 
-  cardCount.textContent = `${count} carta${count === 1 ? '' : 's'}`;
+  cardCount.textContent = `${count} card${count === 1 ? '' : 's'}`;
   cardCount.className = 'status-value status-active';
 
   const date = new Date(data.lastUpdated);
@@ -219,7 +219,7 @@ function updateStatusUI(data: WishlistData): void {
 }
 
 function updateStatusEmpty(): void {
-  statusValue.textContent = '⚠️ Sin wishlist';
+  statusValue.textContent = '⚠️ No wishlist';
   statusValue.className = 'status-value status-empty';
   cardCount.textContent = '—';
   cardCount.className = 'status-value';
@@ -234,7 +234,7 @@ function updateStatusError(msg: string): void {
 
 function renderCardList(filter: string): void {
   if (!currentWishlist?.cards?.length) {
-    cardList.innerHTML = '<li class="empty-message">No hay cartas</li>';
+    cardList.innerHTML = '<li class="empty-message">No cards found</li>';
     return;
   }
 
@@ -246,7 +246,7 @@ function renderCardList(filter: string): void {
   const sorted = [...filtered].sort((a, b) => a.localeCompare(b));
 
   if (sorted.length === 0) {
-    cardList.innerHTML = '<li class="empty-message">Sin resultados</li>';
+    cardList.innerHTML = '<li class="empty-message">No results</li>';
     return;
   }
 
@@ -267,10 +267,10 @@ function formatDate(date: Date): string {
   const diffMs = now.getTime() - date.getTime();
   const diffMins = Math.floor(diffMs / 60000);
 
-  if (diffMins < 1) return 'Hace un momento';
-  if (diffMins < 60) return `Hace ${diffMins} min`;
-  if (diffMins < 1440) return `Hace ${Math.floor(diffMins / 60)}h`;
-  return date.toLocaleDateString('es-AR', {
+  if (diffMins < 1) return 'Just now';
+  if (diffMins < 60) return `${diffMins}m ago`;
+  if (diffMins < 1440) return `${Math.floor(diffMins / 60)}h ago`;
+  return date.toLocaleDateString('en-US', {
     day: '2-digit',
     month: 'short',
     year: 'numeric',

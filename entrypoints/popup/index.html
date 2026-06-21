@@ -20,15 +20,15 @@
       <!-- Status Card -->
       <section class="card status-card" id="status-card">
         <div class="status-row">
-          <span class="status-label">Estado</span>
-          <span class="status-value" id="status-value">Cargando...</span>
+          <span class="status-label">Status</span>
+          <span class="status-value" id="status-value">Loading...</span>
         </div>
         <div class="status-row">
-          <span class="status-label">Cartas</span>
+          <span class="status-label">Cards</span>
           <span class="status-value" id="card-count">—</span>
         </div>
         <div class="status-row">
-          <span class="status-label">Última sincronización</span>
+          <span class="status-label">Last Sync</span>
           <span class="status-value" id="last-updated">—</span>
         </div>
       </section>
@@ -37,11 +37,11 @@
       <section class="card actions-card">
         <button class="btn btn-primary" id="btn-sync">
           <span class="btn-icon">🔄</span>
-          Sincronizar Wishlist
+          Sync Wishlist
         </button>
         <button class="btn btn-secondary" id="btn-visit">
           <span class="btn-icon">🌐</span>
-          Abrir Moxfield
+          Open Moxfield
         </button>
       </section>
 
@@ -49,11 +49,11 @@
       <section class="card import-card">
         <button class="toggle-section" id="btn-toggle-import">
           <span class="toggle-icon" id="toggle-icon">▶</span>
-          Importación Manual
+          Manual Import
         </button>
         <div class="import-content" id="import-content" hidden>
           <p class="import-help">
-            Exportá tu wishlist desde Moxfield y pegá el texto acá:
+            Export your wishlist from Moxfield and paste the text here:
           </p>
           <textarea
             class="import-textarea"
@@ -63,7 +63,7 @@
           ></textarea>
           <button class="btn btn-primary" id="btn-import">
             <span class="btn-icon">📥</span>
-            Importar
+            Import
           </button>
         </div>
       </section>
@@ -72,7 +72,7 @@
       <section class="card list-card" id="list-card" hidden>
         <button class="toggle-section" id="btn-toggle-list">
           <span class="toggle-icon" id="list-toggle-icon">▶</span>
-          Ver Cartas
+          View Cards
         </button>
         <div class="list-content" id="list-content" hidden>
           <div class="search-box">
@@ -80,7 +80,7 @@
               type="text"
               class="search-input"
               id="search-input"
-              placeholder="Buscar carta..."
+              placeholder="Search card..."
             />
           </div>
           <ul class="card-list" id="card-list"></ul>
@@ -90,11 +90,11 @@
       <!-- Settings -->
       <section class="card settings-card">
         <div class="setting-row">
-          <label for="toggle-enabled">Highlighting activo</label>
+          <label for="toggle-enabled">Highlighting active</label>
           <input type="checkbox" class="toggle" id="toggle-enabled" checked />
         </div>
         <div class="setting-row">
-          <label for="toggle-badge">Mostrar badge flotante</label>
+          <label for="toggle-badge">Show floating badge</label>
           <input type="checkbox" class="toggle" id="toggle-badge" checked />
         </div>
       </section>
@@ -103,7 +103,7 @@
       <section class="card danger-card">
         <button class="btn btn-danger" id="btn-clear">
           <span class="btn-icon">🗑️</span>
-          Limpiar Wishlist
+          Clear Wishlist
         </button>
       </section>
 
