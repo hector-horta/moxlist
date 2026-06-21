@@ -208,10 +208,15 @@ function scanPage(): void {
  * Extracts the card name from the text content and checks against wishlist.
  */
 function processCardElement(el: HTMLElement): void {
+  // Skip hidden elements to prevent cards in invisible SPA views or containers from inflating the count
+  if (el.offsetWidth === 0 && el.offsetHeight === 0) {
+    return;
+  }
   const name = extractCardName(el);
   if (!name) return;
   processCardWithName(el, name);
 }
+
 
 
 /**
