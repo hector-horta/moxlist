@@ -1,51 +1,51 @@
 # MoxList — Wishlist Highlighter for Moxfield
 
-MoxList es una extensión de navegador cross-browser (compatible con Chrome y Firefox) desarrollada en TypeScript utilizando el framework **WXT (Web Extension Toolkit)**. 
+MoxList is a cross-browser browser extension (compatible with both Chrome and Firefox) developed in TypeScript using the **WXT (Web Extension Toolkit)** framework. 
 
-La extensión destaca de forma visual mediante un emoji de corona (👑) y un contador flotante todas las cartas de tu wishlist de Moxfield que se muestren en cualquier página de Moxfield (como decklists de otros usuarios, buscador de cartas, tu perfil, páginas de trade, colecciones, etc.).
-
----
-
-## Características Principales
-
-*   **Sincronización Automática via API**: Obtiene tu wishlist de Moxfield de forma directa con un solo click usando tu sesión activa de Moxfield.
-*   **Importación Manual**: Alternativa para importar tu wishlist copiando y pegando el formato de texto exportado de Moxfield.
-*   **Highlight Visual Resiliente**: Agrega el emoji 👑 antes del nombre de las cartas y actualiza un badge flotante en la esquina inferior derecha ("X cartas del wishlist") con animaciones fluidas.
-*   **Compatibilidad con React/SPA**: Utiliza un MutationObserver avanzado que observa cambios de contenido y datos de texto (`characterData`), permitiendo re-escanear elementos reciclados por React al navegar, paginar o filtrar.
-*   **Normalización de Variaciones y Sufijos**: Identifica cartas base ignorando sufijos y variantes complejas envueltas en subetiquetas `<span>` como `(Foil)`, `(Borderless)`, etc.
-*   **Soporte Doble Cara (DFC)**: Identifica coincidencias en cartas de dos caras (ej. "Delver of Secrets // Insectile Aberration" se destaca tanto por su nombre completo como por el de su cara frontal).
-*   **Matching Exacto**: Comparación estricta por nombre completo e insensible a mayúsculas/minúsculas (evita falsos positivos como destacar "Chaos Confetti" cuando buscas "Chaos Orb").
-*   **Diseño Premium**: Popup con interfaz oscura (Dark Navy) y detalles dorados inspirados en la estética moderna de Moxfield.
+The extension highlights all cards from your Moxfield wishlist with a crown emoji (👑) and updates a floating counter badge in the bottom-right corner whenever they appear on any Moxfield page (such as other users' decklists, card searches, user profiles, trade pages, collections, etc.).
 
 ---
 
-## Arquitectura del Proyecto
+## Key Features
 
-### Estructura de Directorios
+*   **One-Click Auto Sync**: Retrieves your Moxfield wishlist directly using your active session cookies in a single click.
+*   **Manual Import**: Fallback method to import your wishlist by copying and pasting the standard text format exported from Moxfield.
+*   **Resilient Visual Highlights**: Prepends a 👑 emoji to matched card names and shows a floating counter badge ("X wishlist cards") with smooth transitions and animations.
+*   **React/SPA Compatibility**: Uses a specialized MutationObserver that watches both DOM changes and text mutations (`characterData`), ensuring recycled React elements are re-scanned when browsing, paginating, or filtering.
+*   **Variation and Suffix Normalization**: Extracts core card names by prioritizing direct text nodes, ignoring variant badges like `(Foil)`, `(Borderless)`, or collector numbers nested inside sub-elements.
+*   **Double-Faced Card (DFC) Support**: Handles dual-sided cards (e.g., highlighting "Delver of Secrets // Insectile Aberration" by matching either the full name or the front face).
+*   **Exact Matching**: Case-insensitive full-name comparison to avoid false positives (e.g., matching "Chaos Confetti" when "Chaos Orb" is in the wishlist).
+*   **Premium Theme**: User interface styled with a dark navy theme and gold accents matching Moxfield's aesthetic.
+
+---
+
+## Directory Structure & Architecture
+
+### Directory Layout
 
 ```
 d:\dev\moxlist\
-├── wxt.config.ts                    # Configuración de WXT (metadatos, permisos y builds)
-├── package.json                     # Scripts y dependencias del proyecto (WXT, TypeScript)
-├── tsconfig.json                    # Configuración de compilación TypeScript
-├── public/                          # Recursos estáticos
-│   ├── icon.svg                     # Icono base vectorial (Corona dorada)
-│   └── icon/                        # Tamaños PNG requeridos por los navegadores
-├── utils/                           # Utilidades lógicas modulares
-│   ├── types.ts                     # Definiciones y contratos de datos
-│   ├── storage.ts                   # Wrapper tipado para browser.storage.local
-│   ├── card-matcher.ts              # Algoritmo de normalización y matching exacto
-│   └── wishlist-parser.ts           # Parser de respuestas de API JSON y texto plano
-└── entrypoints/                     # Puntos de entrada de la extensión
-    ├── background.ts                # Service Worker para sync de API y mensajería
-    ├── content.ts                   # Script de inyección en DOM con MutationObserver
-    └── popup/                       # Popup flotante de la barra de herramientas
+├── wxt.config.ts                    # WXT configuration (metadata, permissions, and targets)
+├── package.json                     # Scripts and project dependencies (WXT, TypeScript)
+├── tsconfig.json                    # TypeScript compiler configuration
+├── public/                          # Static assets
+│   ├── icon.svg                     # Vector source icon (Dorada crown)
+│   └── icon/                        # PNG sizes required by browsers
+├── utils/                           # Modular logical utilities
+│   ├── types.ts                     # TypeScript interfaces and contracts
+│   ├── storage.ts                   # Typed wrapper for browser.storage.local
+│   ├── card-matcher.ts              # Normalization and exact matching algorithms
+│   └── wishlist-parser.ts           # Parsers for API JSON and plain text inputs
+└── entrypoints/                     # Extension entry points
+    ├── background.ts                # Service Worker handling API sync and messaging
+    ├── content.ts                   # Content script for DOM scanning and highlighting
+    └── popup/                       # Browser action toolbar popup
         ├── index.html
         ├── main.ts
         └── style.css
 ```
 
-### Flujo de Datos
+### Data Flow
 
 ```
 [Moxfield Tab] ──(Cookies)──> [background.ts] ──(POST /startup/authenticated)──> [Moxfield API]
@@ -63,76 +63,76 @@ d:\dev\moxlist\
 
 ---
 
-## Stack Tecnológico
+## Tech Stack
 
 *   **Core**: Vanilla TypeScript / JavaScript.
-*   **Framework**: [WXT (Web Extension Toolkit)](https://wxt.dev/) — Simplifica el desarrollo cross-browser empaquetando para Manifest V3 en Chrome y Manifest V2 en Firefox de forma nativa.
-*   **Bundler**: Vite 8+ (Configurado internamente por WXT).
-*   **Diseño**: Vanilla CSS (Dark mode adaptativo con HSL tailored colors y animaciones clave `@keyframes`).
+*   **Framework**: [WXT (Web Extension Toolkit)](https://wxt.dev/) — Automatically compiles Manifest V3 for Chrome and Manifest V2 for Firefox.
+*   **Bundler**: Vite 8+ (configured internally by WXT).
+*   **Styling**: Vanilla CSS (adaptive dark mode with HSL tailored colors and keyframe animations).
 
 ---
 
-## Detalles Técnicos de la API
+## API Details
 
-La sincronización automática utiliza el endpoint interno y privado de Moxfield:
+Automatic synchronization fetches data from Moxfield's private, internal session endpoint:
 *   **URL**: `POST https://api2.moxfield.com/v1/startup/authenticated`
-*   **Cabeceras**: `Content-Type: application/json`
-*   **Cuerpo**: `{}` (Objeto vacío)
-*   **Autenticación**: Credenciales de sesión (`credentials: 'include'`) enviadas de forma segura desde el Background Service Worker aprovechando los permisos de host.
+*   **Headers**: `Content-Type: application/json`
+*   **Body**: `{}`
+*   **Authentication**: Session cookies (`credentials: 'include'`) sent securely from the Background Service Worker.
 
-Este endpoint retorna un payload unificado que contiene el perfil del usuario logueado en la clave `refresh` y los datos del deck especial de la wishlist en `wishList.deck`, evitando hacer múltiples llamadas cruzadas.
-
----
-
-## Requisitos Previos
-
-*   [Node.js](https://nodejs.org/) v20 o superior.
-*   `npm` (incluido con Node.js).
+This endpoint returns a single unified JSON payload containing the authenticated profile details in `refresh` and the wishlist deck structure in `wishList.deck`, which contains the list of cards.
 
 ---
 
-## Guía de Instalación y Desarrollo Local
+## Prerequisites
 
-### 1. Clonar el repositorio
+*   [Node.js](https://nodejs.org/) v20 or higher.
+*   `npm` (installed with Node.js).
+
+---
+
+## Installation & Local Development Guide
+
+### 1. Clone the repository
 ```bash
 git clone https://github.com/hector-horta/moxlist.git
 cd moxlist
 ```
 
-### 2. Instalar dependencias
+### 2. Install dependencies
 ```bash
 npm install
 ```
 
-### 3. Scripts de Desarrollo y Build
+### 3. Development and Build Scripts
 
-| Comando | Acción |
+| Command | Action |
 |---------|--------|
-| `npm run dev` | Inicia entorno de desarrollo con HMR (Hot Module Replacement) en Chrome |
-| `npm run dev:firefox` | Inicia entorno de desarrollo con HMR en Firefox |
-| `npm run compile` | Valida que no existan errores de compilación TypeScript (`tsc --noEmit`) |
-| `npm run build` | Compila y empaqueta la extensión para **Chrome (Manifest V3)** en `.output/chrome-mv3/` |
-| `npm run build:firefox` | Compila y empaqueta la extensión para **Firefox (Manifest V2)** en `.output/firefox-mv2/` |
-| `npm run zip` | Empaqueta la build de Chrome en un archivo ZIP para distribución |
-| `npm run zip:firefox` | Empaqueta la build de Firefox en un archivo ZIP para distribución |
+| `npm run dev` | Starts development server with HMR (Hot Module Replacement) in Google Chrome |
+| `npm run dev:firefox` | Starts development server with HMR in Mozilla Firefox |
+| `npm run compile` | Runs TypeScript compilation verification (`tsc --noEmit`) |
+| `npm run build` | Builds the production extension for **Chrome (Manifest V3)** under `.output/chrome-mv3/` |
+| `npm run build:firefox` | Builds the production extension for **Firefox (Manifest V2)** under `.output/firefox-mv2/` |
+| `npm run zip` | Packages the Chrome build into a ZIP file for distribution |
+| `npm run zip:firefox` | Packages the Firefox build into a ZIP file for distribution |
 
 ---
 
-## Cómo Cargar la Extensión en tu Navegador
+## How to Load the Extension in Your Browser
 
-### En Google Chrome / Chromium
-1. Abrí Chrome y navegá a `chrome://extensions/`.
-2. Activá el **Modo de desarrollador** (interruptor arriba a la derecha).
-3. Hacé clic en **Cargar descomprimida** (Load unpacked).
-4. Seleccioná la carpeta de la build generada: `d:\dev\moxlist\.output\chrome-mv3\`.
+### Google Chrome / Chromium-based
+1. Open Chrome and navigate to `chrome://extensions/`.
+2. Toggle on **Developer mode** (switch in the top-right corner).
+3. Click **Load unpacked** in the top-left.
+4. Select the build directory: `d:\dev\moxlist\.output\chrome-mv3\`.
 
-### En Mozilla Firefox
-1. Abrí Firefox y navegá a `about:debugging#/runtime/this-firefox`.
-2. Hacé clic en **Cargar complemento temporal...** (Load Temporary Add-on...).
-3. Seleccioná el archivo `manifest.json` dentro de la carpeta: `d:\dev\moxlist\.output\firefox-mv2/manifest.json`.
+### Mozilla Firefox
+1. Open Firefox and navigate to `about:debugging#/runtime/this-firefox`.
+2. Click **Load Temporary Add-on...**.
+3. Select the `manifest.json` file inside the build directory: `d:\dev\moxlist\.output\firefox-mv2/manifest.json`.
 
 ---
 
-## Licencia y Descargo de Responsabilidad
+## License and Disclaimer
 
-Este proyecto es una herramienta de código abierto desarrollada exclusivamente para uso personal y comunitario. MoxList **no** está afiliado, asociado, autorizado, respaldado ni conectado de ninguna manera con Moxfield ni Wizards of the Coast. La obtención automática de datos utiliza endpoints privados del servicio web de Moxfield y su estabilidad depende de que el sitio no realice cambios estructurales en su infraestructura privada.
+This project is an open-source tool developed solely for personal and community use. MoxList is **not** affiliated, associated, authorized, endorsed by, or in any way officially connected with Moxfield or Wizards of the Coast. The automatic sync feature relies on private endpoints and its stability depends on Moxfield maintaining their current internal API structure.
