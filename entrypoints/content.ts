@@ -165,7 +165,7 @@ function injectStyles(): void {
 function scanPage(): void {
   if (wishlistIndex.size === 0) return;
 
-  matchCount = 0;
+  const elementsToProcess = new Set<HTMLElement>();
 
   // Strategy 1: Links to card pages (/cards/...)
   // These are the most reliable selectors across all Moxfield views
@@ -173,7 +173,7 @@ function scanPage(): void {
     'a[href*="/cards/"]'
   );
   for (const link of cardLinks) {
-    processCardElement(link);
+    elementsToProcess.add(link);
   }
 
   // Strategy 2: Elements with card data attributes
@@ -181,10 +181,7 @@ function scanPage(): void {
     '[data-card-name], [data-name]'
   );
   for (const el of cardElements) {
-    const name = el.getAttribute('data-card-name') || el.getAttribute('data-name');
-    if (name) {
-      processCardElementWithName(el, name);
-    }
+    elementsToProcess.add(el);
   }
 
   // Strategy 3: Deck table rows — text view
@@ -193,7 +190,13 @@ function scanPage(): void {
     'table a, .deckbox a, [class*="deck"] a'
   );
   for (const link of tableLinks) {
-    processCardElement(link);
+    elementsToProcess.add(link);
+  }
+
+  // Process each unique element exactly once
+  matchCount = 0;
+  for (const el of elementsToProcess) {
+    processCardElement(el);
   }
 
   // Update badge
@@ -210,12 +213,6 @@ function processCardElement(el: HTMLElement): void {
   processCardWithName(el, name);
 }
 
-/**
- * Processes a card element when we already know the card name.
- */
-function processCardElementWithName(el: HTMLElement, name: string): void {
-  processCardWithName(el, name);
-}
 
 /**
  * Core processor for highlighting cards with safety checks for SPA updates.
