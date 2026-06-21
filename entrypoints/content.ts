@@ -166,6 +166,7 @@ function scanPage(): void {
   if (wishlistIndex.size === 0) return;
 
   const elementsToProcess = new Set<HTMLElement>();
+  const hasDeckview = document.querySelector('section.deckview') !== null;
 
   // Strategy 1: Links to card pages (/cards/...)
   // These are the most reliable selectors across all Moxfield views
@@ -173,6 +174,9 @@ function scanPage(): void {
     'a[href*="/cards/"]'
   );
   for (const link of cardLinks) {
+    if (hasDeckview && !link.closest('section.deckview')) {
+      continue;
+    }
     elementsToProcess.add(link);
   }
 
@@ -181,6 +185,9 @@ function scanPage(): void {
     '[data-card-name], [data-name]'
   );
   for (const el of cardElements) {
+    if (hasDeckview && !el.closest('section.deckview')) {
+      continue;
+    }
     elementsToProcess.add(el);
   }
 
@@ -190,10 +197,13 @@ function scanPage(): void {
     'table a, .deckbox a, [class*="deck"] a'
   );
   for (const link of tableLinks) {
+    if (hasDeckview && !link.closest('section.deckview')) {
+      continue;
+    }
     elementsToProcess.add(link);
   }
 
-  // Process each unique element exactly once
+  // Process each unique visible element exactly once
   matchCount = 0;
   for (const el of elementsToProcess) {
     processCardElement(el);
@@ -202,6 +212,7 @@ function scanPage(): void {
   // Update badge
   updateBadge();
 }
+
 
 /**
  * Processes a single card element (typically an <a> link).
