@@ -9,7 +9,7 @@ The extension highlights all cards from your Moxfield wishlist with a crown emoj
 ## Key Features
 
 *   **One-Click Auto Sync**: Retrieves your Moxfield wishlist directly using your active session cookies in a single click.
-*   **Manual Import**: Fallback method to import your wishlist by copying and pasting the standard text format exported from Moxfield.
+*   **Automatic Login Redirect**: If you're not logged into Moxfield when syncing, the extension automatically opens the Moxfield sign-in page so you can authenticate and try again.
 *   **Resilient Visual Highlights**: Prepends a 👑 emoji to matched card names and shows a floating counter badge ("X wishlist cards") with smooth transitions and animations.
 *   **React/SPA Compatibility**: Uses a specialized MutationObserver that watches both DOM changes and text mutations (`characterData`), ensuring recycled React elements are re-scanned when browsing, paginating, or filtering.
 *   **Variation and Suffix Normalization**: Extracts core card names by prioritizing direct text nodes, ignoring variant badges like `(Foil)`, `(Borderless)`, or collector numbers nested inside sub-elements.
@@ -35,7 +35,7 @@ d:\dev\moxlist\
 │   ├── types.ts                     # TypeScript interfaces and contracts
 │   ├── storage.ts                   # Typed wrapper for browser.storage.local
 │   ├── card-matcher.ts              # Normalization and exact matching algorithms
-│   └── wishlist-parser.ts           # Parsers for API JSON and plain text inputs
+│   └── wishlist-parser.ts           # Parser for Moxfield API JSON responses
 └── entrypoints/                     # Extension entry points
     ├── background.ts                # Service Worker handling API sync and messaging
     ├── content.ts                   # Content script for DOM scanning and highlighting

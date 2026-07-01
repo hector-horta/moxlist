@@ -20,11 +20,7 @@ const lastUpdated = document.getElementById('last-updated')!;
 const btnSync = document.getElementById('btn-sync') as HTMLButtonElement;
 const btnVisit = document.getElementById('btn-visit') as HTMLButtonElement;
 
-const btnToggleImport = document.getElementById('btn-toggle-import')!;
-const toggleIcon = document.getElementById('toggle-icon')!;
-const importContent = document.getElementById('import-content')!;
-const importTextarea = document.getElementById('import-textarea') as HTMLTextAreaElement;
-const btnImport = document.getElementById('btn-import') as HTMLButtonElement;
+
 
 const listCard = document.getElementById('list-card')!;
 const btnToggleList = document.getElementById('btn-toggle-list')!;
@@ -84,15 +80,7 @@ function bindEvents(): void {
     browser.tabs.create({ url: 'https://www.moxfield.com/wishlist' });
   });
 
-  // Toggle import section
-  btnToggleImport.addEventListener('click', () => {
-    const isHidden = importContent.hidden;
-    importContent.hidden = !isHidden;
-    toggleIcon.classList.toggle('open', isHidden);
-  });
 
-  // Import
-  btnImport.addEventListener('click', handleImport);
 
   // Toggle list section
   btnToggleList.addEventListener('click', () => {
@@ -139,6 +127,9 @@ async function handleSync(): Promise<void> {
       updateStatusUI(currentWishlist);
       showToast(`✅ ${currentWishlist.cards.length} cards synced successfully`);
     } else if (!response.success) {
+      if (response.errorCode === 'AUTH_REQUIRED') {
+        browser.tabs.create({ url: 'https://moxfield.com/account/signin' });
+      }
       showToast(`❌ ${response.error || 'Unknown error'}`, 'error');
     }
   } catch (err) {
@@ -149,38 +140,7 @@ async function handleSync(): Promise<void> {
   }
 }
 
-// --- Import ---
-async function handleImport(): Promise<void> {
-  const text = importTextarea.value.trim();
-  if (!text) {
-    showToast('⚠️ Please paste your card list first', 'error');
-    return;
-  }
 
-  btnImport.disabled = true;
-  const originalHTML = btnImport.innerHTML;
-  btnImport.innerHTML = '<span class="spinner"></span> Importing...';
-
-  try {
-    const response = await sendMessage({ type: 'IMPORT_WISHLIST', text });
-
-    if (response.success && response.data) {
-      currentWishlist = response.data as WishlistData;
-      updateStatusUI(currentWishlist);
-      importTextarea.value = '';
-      importContent.hidden = true;
-      toggleIcon.classList.remove('open');
-      showToast(`✅ ${currentWishlist.cards.length} cards imported`);
-    } else if (!response.success) {
-      showToast(`❌ ${response.error || 'Unknown error'}`, 'error');
-    }
-  } catch {
-    showToast('❌ Error importing', 'error');
-  } finally {
-    btnImport.disabled = false;
-    btnImport.innerHTML = originalHTML;
-  }
-}
 
 // --- Clear ---
 async function handleClear(): Promise<void> {

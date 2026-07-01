@@ -125,11 +125,6 @@ body::-webkit-scrollbar-thumb {
   border-color: rgba(255, 255, 255, 0.1);
 }
 
-/* --- Status Card --- */
-.status-card {
-  border-left: 3px solid var(--gold);
-}
-
 .status-row {
   display: flex;
   justify-content: space-between;
@@ -277,43 +272,6 @@ body::-webkit-scrollbar-thumb {
   transform: rotate(90deg);
 }
 
-/* --- Import --- */
-.import-content {
-  margin-top: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.import-help {
-  color: var(--text-secondary);
-  font-size: 11px;
-}
-
-.import-textarea {
-  width: 100%;
-  background: var(--bg-input);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: var(--radius-sm);
-  color: var(--text-primary);
-  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-  font-size: 12px;
-  padding: 10px;
-  resize: vertical;
-  min-height: 80px;
-  max-height: 200px;
-  transition: border-color var(--transition);
-}
-
-.import-textarea:focus {
-  outline: none;
-  border-color: var(--gold-border);
-  box-shadow: 0 0 0 3px var(--gold-glow);
-}
-
-.import-textarea::placeholder {
-  color: var(--text-muted);
-}
 
 /* --- Card List --- */
 .list-content {

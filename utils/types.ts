@@ -52,8 +52,8 @@ export interface WishlistData {
   cards: string[];
   /** ISO timestamp of last update */
   lastUpdated: string;
-  /** Source of the data: 'sync' (API) or 'manual' (text import) */
-  source: 'sync' | 'manual';
+  /** Source of the data */
+  source: 'sync';
 }
 
 /** Extension settings */
@@ -74,7 +74,7 @@ export const DEFAULT_SETTINGS: MoxListSettings = {
 export type MoxListMessage =
   | { type: 'GET_WISHLIST' }
   | { type: 'SYNC_WISHLIST' }
-  | { type: 'IMPORT_WISHLIST'; text: string }
+
   | { type: 'CLEAR_WISHLIST' }
   | { type: 'GET_SETTINGS' }
   | { type: 'UPDATE_SETTINGS'; settings: Partial<MoxListSettings> }
@@ -83,4 +83,4 @@ export type MoxListMessage =
 
 export type MoxListResponse =
   | { success: true; data?: unknown }
-  | { success: false; error: string };
+  | { success: false; error: string; errorCode?: string };

@@ -4,12 +4,11 @@
  * Responsibilities:
  * 1. Handle SYNC_WISHLIST: fetch the user's wishlist via Moxfield's internal API
  *    using the browser's existing cookies (user must be logged in).
- * 2. Handle IMPORT_WISHLIST: parse manually pasted text.
- * 3. Handle GET_WISHLIST / CLEAR_WISHLIST / GET_SETTINGS / UPDATE_SETTINGS.
- * 4. Notify content scripts when the wishlist changes.
+ * 2. Handle GET_WISHLIST / CLEAR_WISHLIST / GET_SETTINGS / UPDATE_SETTINGS.
+ * 3. Notify content scripts when the wishlist changes.
  */
 
-import { parseApiResponse, parseManualText } from '@/utils/wishlist-parser';
+import { parseApiResponse } from '@/utils/wishlist-parser';
 import { getWishlist, setWishlist, clearWishlist, getSettings, updateSettings } from '@/utils/storage';
 import type { MoxListMessage, MoxListResponse, WishlistData, MoxfieldDeckResponse } from '@/utils/types';
 
@@ -34,8 +33,7 @@ async function handleMessage(message: MoxListMessage): Promise<MoxListResponse> 
     case 'SYNC_WISHLIST':
       return syncWishlist();
 
-    case 'IMPORT_WISHLIST':
-      return importWishlist(message.text);
+
 
     case 'GET_WISHLIST': {
       const data = await getWishlist();
@@ -44,7 +42,7 @@ async function handleMessage(message: MoxListMessage): Promise<MoxListResponse> 
 
     case 'CLEAR_WISHLIST':
       await clearWishlist();
-      notifyContentScripts({ type: 'WISHLIST_UPDATED', data: { cards: [], lastUpdated: '', source: 'manual' } });
+      notifyContentScripts({ type: 'WISHLIST_UPDATED', data: { cards: [], lastUpdated: '', source: 'sync' } });
       return { success: true };
 
     case 'GET_SETTINGS': {
@@ -80,10 +78,11 @@ async function syncWishlist(): Promise<MoxListResponse> {
     });
 
     if (!response.ok) {
-      if (response.status === 401 || response.status === 403) {
+      if (response.status === 400 || response.status === 401 || response.status === 403) {
         return {
           success: false,
-          error: 'You are not logged into Moxfield. Please open moxfield.com, log in, and try again.',
+          error: 'You are not logged into Moxfield. Please log in and try again.',
+          errorCode: 'AUTH_REQUIRED',
         };
       }
       return {
@@ -133,31 +132,7 @@ function processWishlistResponse(data: MoxfieldDeckResponse): MoxListResponse {
   return { success: true, data: wishlistData };
 }
 
-async function importWishlist(text: string): Promise<MoxListResponse> {
-  if (!text.trim()) {
-    return { success: false, error: 'The text is empty.' };
-  }
 
-  const cardNames = parseManualText(text);
-
-  if (cardNames.length === 0) {
-    return {
-      success: false,
-      error: 'Could not extract card names from the text.',
-    };
-  }
-
-  const wishlistData: WishlistData = {
-    cards: cardNames,
-    lastUpdated: new Date().toISOString(),
-    source: 'manual',
-  };
-
-  await setWishlist(wishlistData);
-  notifyContentScripts({ type: 'WISHLIST_UPDATED', data: wishlistData });
-
-  return { success: true, data: wishlistData };
-}
 
 /**
  * Notify all Moxfield tabs that the wishlist was updated.
